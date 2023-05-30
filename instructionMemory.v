@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 04/25/2023 02:13:11 PM
+// Create Date: 04/25/2023 02:13:53 PM
 // Design Name: 
-// Module Name: register
+// Module Name: instructionMemory
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,22 +20,19 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module register(clk, wrt, rd, rs, rt, dataIn, rsOut, rtOut);
+module instructionMemory(clk, addr, out);
 
-input clk, wrt;
-input [5:0] rd;
-input [5:0] rs;
-input [5:0] rt;
-input [31:0 ]dataIn;
-reg[31:0] registers[63:0];
-output reg[31:0] rsOut;
-output reg[31:0] rtOut;
+input clk;
+input [7:0] addr;
+wire [31:0] instructions [255:0];
+output reg [31:0] out;
+
+assign instructions[100] = 12;
+assign instructions[120] = 5;
 
 always@(posedge clk)
 begin
-    rsOut = registers[rs];
-    rtOut = registers[rt];
-    if(wrt == 1)
-        registers[rd] = dataIn;
+    out = instructions[addr];
 end
+
 endmodule
