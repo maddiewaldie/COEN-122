@@ -30,7 +30,7 @@ output reg [31:0] out;
 assign instructions[100] = 12;
 assign instructions[120] = 5;
 
-always@(posedge clk)
+always@(negedge clk)
 begin
     out = instructions[addr];
 end
