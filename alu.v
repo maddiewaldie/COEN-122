@@ -19,33 +19,41 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
+module alu(A, B, sel, out, N, Z);
+    input [31:0] A, B;
+    input [3:0] sel;
+    output reg [31:0] out;
+    output reg N, Z;
 
-module ALU(A, B, add, inc, neg, sub, out, Z, N);
-    input [31:0] A;
-    input [31:0] B;
-    input add, inc, neg, sub;
-    output[31:0] out;
-    output Z,N;
-    
-    wire [1: 0] select;
-    wire [31:0] outA;
-    wire [31:0] outB;
-    wire [31:0] neg_A;
-    wire [31:0] out_adder;
-    wire not_sub, carry;
-    
-    not(not_sub, sub);
-    
-    and(select[0], inc, not_sub);
-    nor(select[1], add, inc);
-    
-    Negate negate_A(A, neg_A);
-    ThreeToOneMux mux_A(A, neg_A, select, outA);
-    TwoToOneMux mux_B(B, neg, outB);
-    FullAdder addAB(.A(outA), .B(outB), .cout(carry), .sum(out));
-    
-    nor(Z, out[0], out[1], out[2], out[3], out[4], out[5], out[6], out[7], out[8], out[9], out[10], out[11], out[12], out[13], out[14], out[15], out[16], out[17], out[18], out[19], out[20], out[21], out[22], out[23], out[24], out[25], out[26], out[27], out[28], out[29], out[30], out[31]);
-    
-    assign N = out[31];
+    always@(A, B, sel)
+
+    begin
+        if(sel == 4'b0000) // add
+            out - A + B;
+        if(sel == 4'b0101) // increment
+            out = A + 4'b1000; // increment by 16 - check later
+        if(sel == 4'b0010) // negate
+            out = ~A + 1;
+        if(sel == 4'b0011) // subtract
+            out = A + (~B + 1);
+        if(sel == 4'b0100) // pass val
+            out = A;
+    end
+
+    always@(out)
+
+    begin
+        if (sel != 4'b0100)
+        begin
+            if(out == 0)
+                Z = 1;
+            else if (out != 0)
+                Z = 0;
+            if (out[31] == 1)
+                N = 1;
+            else if (out[31] == 0)
+                N = 0
+        end
+    end
 
 endmodule
