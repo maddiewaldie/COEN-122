@@ -2,9 +2,10 @@
 
 module programCounter(input in, input clk, output out);
 
-input in, clk;
-output out;
-wire pcValue;
+input [31:0] in;
+input clk;
+output [31:0] out;
+wire [31:0] pcValue;
 
 always@(posedge clk)
     begin
