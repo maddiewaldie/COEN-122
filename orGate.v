@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module and_gate(d1, d2, out);
+module or_gate(d1, d2, out);
 input d1 ,d2;
 output reg out;
 
