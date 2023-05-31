@@ -29,7 +29,7 @@ module alu(A, B, sel, out, N, Z);
 
     begin
         if(sel == 4'b0000) // add
-            out - A + B;
+            out = -A + B;
         if(sel == 4'b0101) // increment
             out = A + 4'b1000; // increment by 16 - check later
         if(sel == 4'b0010) // negate
@@ -52,7 +52,7 @@ module alu(A, B, sel, out, N, Z);
             if (out[31] == 1)
                 N = 1;
             else if (out[31] == 0)
-                N = 0
+                N = 0;
         end
     end
 
