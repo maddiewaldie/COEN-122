@@ -20,10 +20,11 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module controlUnit(input opcode, output regWrite, output memToReg, output pcToReg, output branchN, output branchZ, output jump, output jumpMem, output memRead, output memWrite, output aluOp);
+module controlUnit(input opcode, output regWrite, output memToReg, output ALUSrc1, output ALUSrc2, output branchN, output branchZ, output jump, output jumpMem, output memRead, output memWrite, output aluOp);
 
 input [3:0] opcode;
-output regWrite, memToReg, pcToReg, branchN, branchZ, jump, jumpMem, memRead, memWrite;
+output regWrite, memToReg, ALUSrc2, branchN, branchZ, jump, jumpMem, memRead, memWrite;
+output [1:0] ALUSrc1
 output [3:0] aluOp;
 
 always@(opcode)
@@ -33,7 +34,8 @@ always@(opcode)
         begin
             regWrite = 0;
             memToReg = 0;
-            pcToReg = 0;
+            ALUSrc1 = 00;
+            ALUSrc2 = 0;
             branchN = 0;
             branchZ = 0;
             jump = 0;
@@ -47,7 +49,8 @@ always@(opcode)
         begin
             regWrite = 1;
             memToReg = 0;
-            pcToReg = 1;
+            ALUSrc1 = 01;
+            ALUSrc2 = 1;
             branchN = 0;
             branchZ = 0;
             jump = 0;
@@ -61,7 +64,8 @@ always@(opcode)
         begin
             regWrite = 1;
             memToReg = 1;
-            pcToReg = 0;
+            ALUSrc1 = 00;
+            ALUSrc2 = 0;
             branchN = 0;
             branchZ = 0;
             jump = 0;
@@ -75,7 +79,8 @@ always@(opcode)
         begin
             regWrite = 0;
             memToReg = 0;
-            pcToReg = 0;
+            ALUSrc1 = 00;
+            ALUSrc2 = 0;
             branchN = 0;
             branchZ = 0;
             jump = 0;
@@ -89,7 +94,8 @@ always@(opcode)
         begin
             regWrite = 1;
             memToReg = 0;
-            pcToReg = 0;
+            ALUSrc1 = 00;
+            ALUSrc2 = 0;
             branchN = 0;
             branchZ = 0;
             jump = 0;
@@ -103,7 +109,8 @@ always@(opcode)
         begin
             regWrite = 1;
             memToReg = 0;
-            pcToReg = 0;
+            ALUSrc1 = 10;
+            ALUSrc2 = 0;
             branchN = 0;
             branchZ = 0;
             jump = 0;
@@ -117,7 +124,8 @@ always@(opcode)
         begin
             regWrite = 1;
             memToReg = 0;
-            pcToReg = 0;
+            ALUSrc1 = 00;
+            ALUSrc2 = 0;
             branchN = 0;
             branchZ = 0;
             jump = 0;
@@ -131,7 +139,8 @@ always@(opcode)
         begin
             regWrite = 1;
             memToReg = 0;
-            pcToReg = 0;
+            ALUSrc1 = 00;
+            ALUSrc2 = 0;
             branchN = 0;
             branchZ = 0;
             jump = 0;
@@ -145,7 +154,8 @@ always@(opcode)
         begin
             regWrite = 0;
             memToReg = 0;
-            pcToReg = 0;
+            ALUSrc1 = 00;
+            ALUSrc2 = 0;
             branchN = 0;
             branchZ = 0;
             jump = 1;
@@ -159,7 +169,8 @@ always@(opcode)
         begin
             regWrite = 0;
             memToReg = 0;
-            pcToReg = 0;
+            ALUSrc1 = 00;
+            ALUSrc2 = 0;
             branchN = 0;
             branchZ = 1;
             jump = 0;
@@ -173,7 +184,8 @@ always@(opcode)
         begin
             regWrite = 0;
             memToReg = 0;
-            pcToReg = 0;
+            ALUSrc1 = 00;
+            ALUSrc2 = 0;
             branchN = 0;
             branchZ = 0;
             jump = 0;
@@ -187,7 +199,8 @@ always@(opcode)
         begin
             regWrite = 0;
             memToReg = 0;
-            pcToReg = 0;
+            ALUSrc1 = 00;
+            ALUSrc2 = 0;
             branchN = 1;
             branchZ = 0;
             jump = 0;

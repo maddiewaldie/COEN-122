@@ -6,7 +6,7 @@ module signExtend(signIn, signOut);
 
     always@(signIn, signOut)
         if (signIn[21] == 1)
-            signOut = (10'b1111111111, signIn);
-        else if (signIn[21] == 0) 
-            signOut = (10'b0000000000, signIn);
+            signOut = {10'b1111111111, signIn};
+        else 
+            signOut = {10'b0000000000, signIn};
 endmodule

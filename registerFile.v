@@ -20,12 +20,12 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module register(clk, wrt, rd, rs, rt, dataIn, rsOut, rtOut);
+module register(clk, wrt, rd, rs1, rs2, dataIn, rsOut, rtOut);
 
 input clk, wrt;
 input [5:0] rd;
-input [5:0] rs;
-input [5:0] rt;
+input [5:0] rs1;
+input [5:0] rs2;
 input [31:0 ]dataIn;
 reg[31:0] registers[63:0];
 output reg[31:0] rsOut;
@@ -33,8 +33,8 @@ output reg[31:0] rtOut;
 
 always@(posedge clk)
 begin
-    rsOut = registers[rs];
-    rtOut = registers[rt];
+    rsOut = registers[rs1];
+    rtOut = registers[rs2];
     if(wrt == 1)
         registers[rd] = dataIn;
 end
