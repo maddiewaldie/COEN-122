@@ -22,11 +22,15 @@ endmodule
 
 module testbench();
 
-    wire [31:0] A;
-    wire [31:0] alu_out;
-    wire [31:0] ex_dataMemoryOut_out;
-    wire ex_jumpMemOut, orOut;
-    wire [31:0] dataOut;
+    wire [31:0] rs_EX;
+    wire [31:0] adder_out;
+    wire [31:0] data_WB;
+    wire jumpMem_WB, or_out;
+    wire [31:0] mux_out;
+
+    MUX mux_test(rs_EX, adder_out, data_WB, jumpMem_WB, or_out, mux_out);
+
+    
 
 
 
