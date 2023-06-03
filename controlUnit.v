@@ -24,7 +24,7 @@ module controlUnit(input opcode, output regWrite, output memToReg, output ALUSrc
 
 input [3:0] opcode;
 output regWrite, memToReg, ALUSrc2, branchN, branchZ, jump, jumpMem, memRead, memWrite;
-output [1:0] ALUSrc1
+output [1:0] ALUSrc1;
 output [3:0] aluOp;
 
 always@(opcode)

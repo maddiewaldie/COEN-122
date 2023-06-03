@@ -20,9 +20,9 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module IF_ID(clk, PC_in, inst_in, PC_id, opcode, rs1, rs2, rd, signIn, signIn_inc );
+module IF_ID(clk, PC_if, inst_in, PC_id, opcode, rs1, rs2, rd, signIn, signIn_inc );
     input clk;
-    input [31:0] PC_in;
+    input [31:0] PC_if;
     input [31:0] inst_in;
     output reg [31:0] PC_id;
     output reg [3:0] opcode;
@@ -34,7 +34,7 @@ module IF_ID(clk, PC_in, inst_in, PC_id, opcode, rs1, rs2, rd, signIn, signIn_in
     
     always@(posedge clk)
     begin
-        PC_id = PC_in;
+        PC_id = PC_if;
         opcode = inst_in[31:28];
         rs1 = inst_in[21:16];
         rs2 = inst_in[15:10];

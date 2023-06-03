@@ -31,6 +31,12 @@ reg[31:0] registers[63:0];
 output reg[31:0] rsOut;
 output reg[31:0] rtOut;
 
+initial
+begin
+    registers[10] = 2;
+    registers[11] = 6;
+end
+
 always@(posedge clk)
 begin
     rsOut = registers[rs1];
