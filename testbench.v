@@ -7,7 +7,8 @@ module testbench();
     wire [31:0] rs_EX; 
     wire [31:0] adder_out;
     wire [31:0] data_WB;
-    wire jumpMem_WB, or_out;
+    wire jumpMem_WB;
+    wire [1:0] or_out;
     wire [31:0] mux_out;
     wire [31:0] PCIn;
 
@@ -67,6 +68,14 @@ module testbench();
     wire [3:0] aluOp;
     
     controlUnit control_test(opcode, regWrite, memToReg, ALUSrc1, ALUSrc2, branchN, branchZ, jump, jumpMem, memRead, memWrite, aluOp);
+    
+    /* Logic Gates */
+    wire z_and_out, n_and_out;
+    
+    andGate z_andGate_test(Z, branch_Z, z_and_out);
+    andGate n_andGate_test(N, branch_N, n_and_out);
+    
+    orGate or_gate_test(z_and_out, n_and_out, jump, or_out); //do we need to sign extend this so that or_out is 4 bits because it is a control to the 4:1 mux??
     
     /*Register File */
     
