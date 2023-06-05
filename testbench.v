@@ -1,30 +1,38 @@
 `timescale 1ns / 1ps
 
 module testbench();
+    
+    /* LEft-most mux */
 
-    wire [31:0] rs_EX;
+    wire [31:0] rs_EX; 
     wire [31:0] adder_out;
     wire [31:0] data_WB;
     wire jumpMem_WB, or_out;
     wire [31:0] mux_out;
     wire [31:0] PCIn;
 
-    MUX mux_test(rs_EX, adder_out, data_WB, jumpMem_WB, or_out, PCIn);
+    MUX mux_test(rs_EX, adder_out, data_WB, jumpMem_WB, or_out, PCIn); //needs to be double checked if rs_EX is correct wire
     
+    /* PC */
    
     wire [31:0] PCOut;
     reg clock;
     
     programCounter PC_test(PCIn, clock, PCOut);
 
+    /* first adder */
+    
     wire N, Z;
 
     alu adder_test(PCOut, 1, 4'b0, PCIn, N, Z);
+    
+    /*Instruction Memory */
     
     wire [31:0] inst_in;
     
     instructionMemory im_test (clock, PCOut, inst_in);
     
+    /* IF/ID Buffer */
     wire [31:0] PC_if;
     wire [31:0] PC_id;
     wire [3:0] opcode;
@@ -37,24 +45,30 @@ module testbench();
     
     IF_ID ifid_test (clock, PC_if, inst_in, PC_id, opcode, rs1, rs2, rd, signIn, signIn_inc);
     
+    /* immediate generator 1 */
     wire [31:0] imm;
     signExtend imm_gen_test1(signIn, imm);
     
+    /* immediate generator 2 (for increment instruction) */
     wire [31:0] imm_inc;
     signExtend imm_gen_test2(signIn_inc, imm_inc);
     
+    /* Control Unit */
     wire regWrite;
     wire memToReg;
-    wire ALUSrc1;
+    wire [1:0] ALUSrc1;
     wire ALUSrc2;
     wire branchN;
     wire branchZ;
     wire jump;
     wire jumpMem;
+    wire memRead;
     wire memWrite;
     wire [3:0] aluOp;
     
     controlUnit control_test(opcode, regWrite, memToReg, ALUSrc1, ALUSrc2, branchN, branchZ, jump, jumpMem, memRead, memWrite, aluOp);
+    
+    /*Register File */
     
     wire regWrite_WB; //from wb? or directly from control? 
     wire [31:0] rs;
@@ -62,35 +76,49 @@ module testbench();
     wire [31:0] dataOut;
     register register_file_test(clock, regWrite_WB, rd, rs1, rs2, dataOut, rs, rt);
     
-   
-   /*unfinished*/ ID_EXMEM id_exmem_test(clock, regWrite, memToReg, ALUSrc1, ALUSrc2, jumpMem, memRead, memWrite, aluOp, PC_id, rs, rt, 
+    /* ID_EXMEM Buffer */
+    wire regWrite_EX, memToReg_EX, jumpMem_EX, memRead_EX, memWrite_EX, ALUSrc2_EX;
+    wire [1:0] ALUSrc1_EX;
+    wire [3:0] aluOp_EX;
+    wire [31:0] PC_EX;
+    wire [31:0] rs_EX;
+    wire [31:0] rt_EX;
+    
+    ID_EXMEM id_exmem_test(clock, regWrite, memToReg, ALUSrc1, ALUSrc2, jumpMem, memRead, memWrite, aluOp, PC_id, rs, rt, 
                      imm, imm_inc, rd, regWrite_EX, memToReg_EX, ALUSrc1_EX, jumpMem_EX, memRead_EX, 
-                memWrie_EX, aluOp_EX, ALUSrc2_EX, PC_EX, rs_EX, rt_EX, 
+                memWrite_EX, aluOp_EX, ALUSrc2_EX, PC_EX, rs_EX, rt_EX, 
                 imm_EX, imm_incEX, rd_EX);
     
-    /* alu_mux1_test (two-to-one mux*/
-    /* alu_mux2_test (three-to-one mux*/  
+    /* alu_mux1_test (two-to-one mux) */
+    /* alu_mux2_test (three-to-one mux) */  
     
-    wire [31:0] alu_mux1;
+    /* ALU test */
+    
+    wire [31:0] alu_mux1; 
     wire [31:0] alu_mux2;
-    wire [3:0] ALUOp_EX;
-    wire [31:0] ALU_EX;
+    wire [31:0] alu_EX;
     
-    alu alu_test(alu_mux1, alu_mux2, ALUOp_EX, ALU_EX, N, Z);
+    alu alu_test(alu_mux1, alu_mux2, aluOp_EX, alu_EX, N, Z);
     
-    /*unfinished*/ dataMemory dataMemory_test(clock, read, wrt, addr, dataIn, dataOut);
-    
-    
-    wire regWrite_EX, memToReg_EX, jumpMem_EX; 
-    wire [31:0] ALU_EX;
+    /* Data Memory test */
     wire [31:0] data_EX;
-    wire [5:0] rd_EX;
-    wire memToReg_WB, jumpMem_WB, ALU_WB;
+    
+    dataMemory dataMemory_test(clock, memRead_EX, memWrite_EX, rs_EX, rt_EX, data_EX);
+    
+    /* EXMEM_WB Buffer */
+ 
+
+    wire memToReg_WB, regWrite_WB, jumpMem_WB;
+    wire [31:0] alu_WB;
     wire [31:0] data_WB;
-    wire [5:0] rd_MEM;   
+    wire [5:0] rd_WB;   
    
-    EXMEM_WB exmem_wb_test(clock, regWrite_EX, memToReg_EX, jumpMem_EX, ALU_EX, data_EX, rd_EX,
-                regWrite_WB, memToReg_WB, jumpMem_WB, ALU_WB, data_WB, rd_MEM);
+    EXMEM_WB exmem_wb_test(clock, regWrite_EX, memToReg_EX, jumpMem_EX, alu_EX, data_EX, rd_EX,
+                regWrite_WB, memToReg_WB, jumpMem_WB, alu_WB, data_WB, rd_WB);
+    
+    /* rightmost mux (two-to-one muxe) */ 
+    
+    
     initial
     begin
         clock = 0;
@@ -100,7 +128,7 @@ module testbench();
 endmodule
 
 
-
+/*
 module instructionMemSum(addr, clk, instrOut);
     wire[31:0] instr[255:0];
     input clock;
@@ -124,5 +152,6 @@ module instructionMemSum(addr, clk, instrOut);
     assign instr[14] = 
     assign instr[15] = 
     assign instr[16] = 
+    */
 
 endmodule
