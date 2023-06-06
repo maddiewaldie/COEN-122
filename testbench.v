@@ -98,13 +98,16 @@ module testbench();
                 memWrite_EX, aluOp_EX, ALUSrc2_EX, PC_EX, rs_EX, rt_EX, 
                 imm_EX, imm_incEX, rd_EX);
     
-    /* alu_mux1_test (two-to-one mux) */
-    /* alu_mux2_test (three-to-one mux) */  
-    
-    /* ALU test */
-    
     wire [31:0] alu_mux1; 
     wire [31:0] alu_mux2;
+
+    /* alu_mux1_test (two-to-one mux) */
+    TwoToOneMux alu_mux1_test(PC_EX, PC_id, ALUSrc2, alu_mux1);
+
+    /* alu_mux2_test (three-to-one mux) */ 
+    ThreeToOneMux alu_mux2_test(rt_EX, imm_EX, imm_incEX ALUSrc1, alu_mux2);
+    
+    /* ALU test */
     wire [31:0] alu_EX;
     
     alu alu_test(alu_mux1, alu_mux2, aluOp_EX, alu_EX, N, Z);
@@ -125,42 +128,13 @@ module testbench();
     EXMEM_WB exmem_wb_test(clock, regWrite_EX, memToReg_EX, jumpMem_EX, alu_EX, data_EX, rd_EX,
                 regWrite_WB, memToReg_WB, jumpMem_WB, alu_WB, data_WB, rd_WB);
     
-    /* rightmost mux (two-to-one muxe) */ 
-    
+    /* rightmost mux (two-to-one mux) */ 
+    TwoToOneMux rightmost_mux_test(alu_WB, data_WB, memToReg, dataOut);
     
     initial
     begin
         clock = 0;
         forever #5 clock = ~clock;
     end    
-
-endmodule
-
-
-/*
-module instructionMemSum(addr, clk, instrOut);
-    wire[31:0] instr[255:0];
-    input clock;
-    input [7:0] addr;
-    output reg [31:0] instrOut;
-
-    assign instr[0] = 32'b1111_001000_000000_000000_0000000001;
-    assign instr[1] = 
-    assign instr[2] = 
-    assign instr[3] = 
-    assign instr[4] = 
-    assign instr[5] = 
-    assign instr[6] = 
-    assign instr[7] = 
-    assign instr[8] = 
-    assign instr[9] = 
-    assign instr[10] = 
-    assign instr[11] = 
-    assign instr[12] = 
-    assign instr[13] = 
-    assign instr[14] = 
-    assign instr[15] = 
-    assign instr[16] = 
-    */
 
 endmodule

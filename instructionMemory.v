@@ -1,57 +1,26 @@
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 04/25/2023 02:13:53 PM
-// Design Name: 
-// Module Name: instructionMemory
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
-
 module instructionMemory(clk, addr, out);
+    input clk;
+    input [7:0] addr;
+    wire [31:0] instructions [255:0];
+    output reg [31:0] out;
 
-input clk;
-input [7:0] addr;
-wire [31:0] instructions [255:0];
-output reg [31:0] out;
+    // Sum program:
+    assign instructions[0] = 0111_000100_00100_00100_0000000000 //SUB x4, x4, x4 		
+    assign instructions[1] = 0100_000101_000010_000011_0000000000// ADD x5, x2, x3;
+    assign instructions[2] =1111_001001_0000000000000000000001 //SVPC x9, 1
+    assign instructions[3] =1110_000110_000010_0000000000000000 //LD x6, x2
+    assign instructions[4] =0100_000100_000100_000110_0000000000 //ADD x4, x4, x6
+    assign instructions[5] =0101_000010_000010_0000000000000001 //INC x2, x2, 1
+    assign instructions[6] =0111_001000_000010_000101_0000000000 //SUB x8, x2, x5
+    assign instructions[7] =1011_001001_0000000000000000000000 //BRN x9
 
-assign instructions[0] = SUB x4, x4, x4 		//clear x4 to 0;
-assign instructions[1] = ADD x5, x2, x3;
-assign instructions[2] = ADD x5, x2, x3
-assign instructions[3] = 1111_000001_0000000000000000000001;
+    // Other instructions:
+    assign instructions[8]=0011_000101_000011_0000000000000000 //ST x5, x3
+    assign instructions[9]=1010_001001_0000000000000000000000 //JM x9
+    assign instructions[10]=1001_000110_0000000000000000000000//BRZ x6
 
-opcode4_rd6b_rs6_rt6_unused10b
-
-ADD x5, x2, x3   	//save location of last element to be summed
-SVPC x9, 1		//save branch address	
-
-LD x6, x2		//load first element in memory to register x6
-ADD x4, x4, x6		//add first element to x4
-INC x2, x2, 1		//go to next element
-SUB x8, x2, x5		//set up negative flag
-BRN x9			//if negative flag == 1, jump back to beginning of loop
-
-//end sun program
-
-store
-jump memory
-brz
-
-always@(negedge clk)
-begin
-    out = instructions[addr];
-end
-
+    always@(negedge clk)
+    begin
+        out = instructions[addr];
+    end
 endmodule

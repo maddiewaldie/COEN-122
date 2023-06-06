@@ -1,174 +1,211 @@
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 04/18/2023 02:08:26 PM
-// Design Name: 
-// Module Name: ThreeToOneMux
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
+module three_oneMux(a, negA, b, sel, out);
 
-
-module ThreeToOneMux(A, negA, sel, out);
-
-input [31:0] A;
+input [31:0] a;
 input [31:0] negA;
+input [31:0] b;
 input [1:0] sel;
+
+wire [1:0] notwire;
+wire [31:0] andwire1;
+wire [31:0] andwire2;
+wire [31:0] andwire3;
+
 output [31:0] out;
 
-wire [31:0] out1;
-wire [31:0] out2;
-wire [31:0] out3;
-wire notSel0, notSel1;
+//Not gate applies to all bits of A & -A
+not(notwire[0], sel[0]);
+not(notwire[1], sel[1]);
 
-not(notSel0, sel[0]);
-not(notSel1, sel[1]);
+//A0 & -A0
+and(andwire1[0], a[0], notwire[0], notwire[1]);
+and(andwire2[0], sel[0], notwire[1], b[0]);
+and(andwire3[0], negA[0], notwire[0], sel[1]);
+or(out[0], andwire1[0], andwire2[0], andwire3[0]);
 
-and(out1[0], A[0], notSel0, notSel1);
-and(out1[1], A[1], notSel0, notSel1);
-and(out1[2], A[2], notSel0, notSel1);
-and(out1[3], A[3], notSel0, notSel1);
-and(out1[4], A[4], notSel0, notSel1);
-and(out1[5], A[5], notSel0, notSel1);
-and(out1[6], A[6], notSel0, notSel1);
-and(out1[7], A[7], notSel0, notSel1);
-and(out1[8], A[8], notSel0, notSel1);
-and(out1[9], A[9], notSel0, notSel1);
-and(out1[10], A[10], notSel0, notSel1);
-and(out1[11], A[11], notSel0, notSel1);
-and(out1[12], A[12], notSel0, notSel1);
-and(out1[13], A[13], notSel0, notSel1);
-and(out1[14], A[14], notSel0, notSel1);
-and(out1[15], A[15], notSel0, notSel1);
-and(out1[16], A[16], notSel0, notSel1);
-and(out1[17], A[17], notSel0, notSel1);
-and(out1[18], A[18], notSel0, notSel1);
-and(out1[19], A[19], notSel0, notSel1);
-and(out1[20], A[20], notSel0, notSel1);
-and(out1[21], A[21], notSel0, notSel1);
-and(out1[22], A[22], notSel0, notSel1);
-and(out1[23], A[23], notSel0, notSel1);
-and(out1[24], A[24], notSel0, notSel1);
-and(out1[25], A[25], notSel0, notSel1);
-and(out1[26], A[26], notSel0, notSel1);
-and(out1[27], A[27], notSel0, notSel1);
-and(out1[28], A[28], notSel0, notSel1);
-and(out1[29], A[29], notSel0, notSel1);
-and(out1[30], A[30], notSel0, notSel1);
-and(out1[31], A[31], notSel0, notSel1);
+//A1 & -A1
+and(andwire1[1], a[1], notwire[0], notwire[1]);
+and(andwire2[1], sel[0], notwire[1], b[1]);
+and(andwire3[1], negA[1], notwire[0], sel[1]);
+or(out[1], andwire1[1], andwire2[1], andwire3[1]);
 
+//A2 & -A2
+and(andwire1[2], a[2], notwire[0], notwire[1]);
+and(andwire2[2], sel[0], notwire[1], b[2]);
+and(andwire3[2], negA[2], notwire[0], sel[1]);
+or(out[2], andwire1[2], andwire2[2], andwire3[2]);
 
-and(out2[0], 1, notSel1, sel[0]);
-and(out2[1], 0, notSel1, sel[0]);
-and(out2[2], 0, notSel1, sel[0]);
-and(out2[3], 0, notSel1, sel[0]);
-and(out2[4], 0, notSel1, sel[0]);
-and(out2[5], 0, notSel1, sel[0]);
-and(out2[6], 0, notSel1, sel[0]);
-and(out2[7], 0, notSel1, sel[0]);
-and(out2[8], 0, notSel1, sel[0]);
-and(out2[9], 0, notSel1, sel[0]);
-and(out2[10], 0, notSel1, sel[0]);
-and(out2[11], 0, notSel1, sel[0]);
-and(out2[12], 0, notSel1, sel[0]);
-and(out2[13], 0, notSel1, sel[0]);
-and(out2[14], 0, notSel1, sel[0]);
-and(out2[15], 0, notSel1, sel[0]);
-and(out2[16], 0, notSel1, sel[0]);
-and(out2[17], 0, notSel1, sel[0]);
-and(out2[18], 0, notSel1, sel[0]);
-and(out2[19], 0, notSel1, sel[0]);
-and(out2[20], 0, notSel1, sel[0]);
-and(out2[21], 0, notSel1, sel[0]);
-and(out2[22], 0, notSel1, sel[0]);
-and(out2[23], 0, notSel1, sel[0]);
-and(out2[24], 0, notSel1, sel[0]);
-and(out2[25], 0, notSel1, sel[0]);
-and(out2[26], 0, notSel1, sel[0]);
-and(out2[27], 0, notSel1, sel[0]);
-and(out2[28], 0, notSel1, sel[0]);
-and(out2[29], 0, notSel1, sel[0]);
-and(out2[30], 0, notSel1, sel[0]);
-and(out2[31], 0, notSel1, sel[0]);
+//A3 & -A3
+and(andwire1[3], a[3], notwire[0], notwire[1]);
+and(andwire2[3], sel[0], notwire[1], b[3]);
+and(andwire3[3], negA[3], notwire[0], sel[1]);
+or(out[3], andwire1[3], andwire2[3], andwire3[3]);
 
+//A4 & -A4
+and(andwire1[4], a[4], notwire[0], notwire[1]);
+and(andwire2[4], sel[0], notwire[1], b[4]);
+and(andwire3[4], negA[4], notwire[0], sel[1]);
+or(out[4], andwire1[4], andwire2[4], andwire3[4]);
 
-and(out3[0], negA[0], sel[1], notSel0);
-and(out3[1], negA[1], sel[1], notSel0);
-and(out3[2], negA[2], sel[1], notSel0);
-and(out3[3], negA[3], sel[1], notSel0);
-and(out3[4], negA[4], sel[1], notSel0);
-and(out3[5], negA[5], sel[1], notSel0);
-and(out3[6], negA[6], sel[1], notSel0);
-and(out3[7], negA[7], sel[1], notSel0);
-and(out3[8], negA[8], sel[1], notSel0);
-and(out3[9], negA[9], sel[1], notSel0);
-and(out3[10], negA[10], sel[1], notSel0);
-and(out3[11], negA[11], sel[1], notSel0);
-and(out3[12], negA[12], sel[1], notSel0);
-and(out3[13], negA[13], sel[1], notSel0);
-and(out3[14], negA[14], sel[1], notSel0);
-and(out3[15], negA[15], sel[1], notSel0);
-and(out3[16], negA[16], sel[1], notSel0);
-and(out3[17], negA[17], sel[1], notSel0);
-and(out3[18], negA[18], sel[1], notSel0);
-and(out3[19], negA[19], sel[1], notSel0);
-and(out3[20], negA[20], sel[1], notSel0);
-and(out3[21], negA[21], sel[1], notSel0);
-and(out3[22], negA[22], sel[1], notSel0);
-and(out3[23], negA[23], sel[1], notSel0);
-and(out3[24], negA[24], sel[1], notSel0);
-and(out3[25], negA[25], sel[1], notSel0);
-and(out3[26], negA[26], sel[1], notSel0);
-and(out3[27], negA[27], sel[1], notSel0);
-and(out3[28], negA[28], sel[1], notSel0);
-and(out3[29], negA[29], sel[1], notSel0);
-and(out3[30], negA[30], sel[1], notSel0);
-and(out3[31], negA[31], sel[1], notSel0);
+//A5 & -A5
+and(andwire1[5], a[5], notwire[0], notwire[1]);
+and(andwire2[5], sel[0], notwire[1], b[5]);
+and(andwire3[5], negA[5], notwire[0], sel[1]);
+or(out[5], andwire1[5], andwire2[5], andwire3[5]);
 
-or(out[0], out1[0], out2[0], out3[0]);
-or(out[1], out1[1], out2[1], out3[1]);
-or(out[2], out1[2], out2[2], out3[2]);
-or(out[3], out1[3], out2[3], out3[3]);
-or(out[4], out1[4], out2[4], out3[4]);
-or(out[5], out1[5], out2[5], out3[5]);
-or(out[6], out1[6], out2[6], out3[6]);
-or(out[7], out1[7], out2[7], out3[7]);
-or(out[8], out1[8], out2[8], out3[8]);
-or(out[9], out1[9], out2[9], out3[9]);
-or(out[10], out1[10], out2[10], out3[10]);
-or(out[11], out1[11], out2[11], out3[11]);
-or(out[12], out1[12], out2[12], out3[12]);
-or(out[13], out1[13], out2[13], out3[13]);
-or(out[14], out1[14], out2[14], out3[14]);
-or(out[15], out1[15], out2[15], out3[15]);
-or(out[16], out1[16], out2[16], out3[16]);
-or(out[17], out1[17], out2[17], out3[17]);
-or(out[18], out1[18], out2[18], out3[18]);
-or(out[19], out1[19], out2[19], out3[19]);
-or(out[20], out1[20], out2[20], out3[20]);
-or(out[21], out1[21], out2[21], out3[21]);
-or(out[22], out1[22], out2[22], out3[22]);
-or(out[23], out1[23], out2[23], out3[23]);
-or(out[24], out1[24], out2[24], out3[24]);
-or(out[25], out1[25], out2[25], out3[25]);
-or(out[26], out1[26], out2[26], out3[26]);
-or(out[27], out1[27], out2[27], out3[27]);
-or(out[28], out1[28], out2[28], out3[28]);
-or(out[29], out1[29], out2[29], out3[29]);
-or(out[30], out1[30], out2[30], out3[30]);
-or(out[31], out1[31], out2[31], out3[31]);
+//A6 & -A6
+and(andwire1[6], a[6], notwire[0], notwire[1]);
+and(andwire2[6], sel[0], notwire[1], b[6]);
+and(andwire3[6], negA[6], notwire[0], sel[1]);
+or(out[6], andwire1[6], andwire2[6], andwire3[6]);
 
+//A7 & -A7
+and(andwire1[7], a[7], notwire[0], notwire[1]);
+and(andwire2[7], sel[0], notwire[1], b[7]);
+and(andwire3[7], negA[7], notwire[0], sel[1]);
+or(out[7], andwire1[7], andwire2[7], andwire3[7]);
 
+//A8 & -A8
+and(andwire1[8], a[8], notwire[0], notwire[1]);
+and(andwire2[8], sel[0], notwire[1], b[8]);
+and(andwire3[8], negA[8], notwire[0], sel[1]);
+or(out[8], andwire1[8], andwire2[8], andwire3[8]);
+
+//A9 & -A9
+and(andwire1[9], a[9], notwire[0], notwire[1]);
+and(andwire2[9], sel[0], notwire[1], b[9]);
+and(andwire3[9], negA[9], notwire[0], sel[1]);
+or(out[9], andwire1[9], andwire2[9], andwire3[9]);
+
+//A10 & -A10
+and(andwire1[10], a[10], notwire[0], notwire[1]);
+and(andwire2[10], sel[0], notwire[1], b[10]);
+and(andwire3[10], negA[10], notwire[0], sel[1]);
+or(out[10], andwire1[10], andwire2[10], andwire3[10]);
+
+//A11 & -A11
+and(andwire1[11], a[11], notwire[0], notwire[1]);
+and(andwire2[11], sel[0], notwire[1], b[11]);
+and(andwire3[11], negA[11], notwire[0], sel[1]);
+or(out[11], andwire1[11], andwire2[11], andwire3[11]);
+
+//A12 & -A12
+and(andwire1[12], a[12], notwire[0], notwire[1]);
+and(andwire2[12], sel[0], notwire[1], b[12]);
+and(andwire3[12], negA[12], notwire[0], sel[1]);
+or(out[12], andwire1[12], andwire2[12], andwire3[12]);
+
+//A13 & -A13
+and(andwire1[13], a[13], notwire[0], notwire[1]);
+and(andwire2[13], sel[0], notwire[1], b[13]);
+and(andwire3[13], negA[13], notwire[0], sel[1]);
+or(out[13], andwire1[13], andwire2[13], andwire3[13]);
+
+//A14 & -A14
+and(andwire1[14], a[14], notwire[0], notwire[1]);
+and(andwire2[14], sel[0], notwire[1], b[14]);
+and(andwire3[14], negA[14], notwire[0], sel[1]);
+or(out[14], andwire1[14], andwire2[14], andwire3[14]);
+
+//A15 & -A15
+and(andwire1[15], a[15], notwire[0], notwire[1]);
+and(andwire2[15], sel[0], notwire[1], b[15]);
+and(andwire3[15], negA[15], notwire[0], sel[1]);
+or(out[15], andwire1[15], andwire2[15], andwire3[15]);
+
+//A16 & -A16
+and(andwire1[16], a[16], notwire[0], notwire[1]);
+and(andwire2[16], sel[0], notwire[1], b[16]);
+and(andwire3[16], negA[16], notwire[0], sel[1]);
+or(out[16], andwire1[16], andwire2[16], andwire3[16]);
+
+//A17 & -A17
+and(andwire1[17], a[17], notwire[0], notwire[1]);
+and(andwire2[17], sel[0], notwire[1], b[17]);
+and(andwire3[17], negA[17], notwire[0], sel[1]);
+or(out[17], andwire1[17], andwire2[17], andwire3[17]);
+
+//A18 & -A18
+and(andwire1[18], a[18], notwire[0], notwire[1]);
+and(andwire2[18], sel[0], notwire[1], b[18]);
+and(andwire3[18], negA[18], notwire[0], sel[1]);
+or(out[18], andwire1[18], andwire2[18], andwire3[18]);
+
+//A19 & -A19
+and(andwire1[19], a[19], notwire[0], notwire[1]);
+and(andwire2[19], sel[0], notwire[1], b[19]);
+and(andwire3[19], negA[19], notwire[0], sel[1]);
+or(out[19], andwire1[19], andwire2[19], andwire3[19]);
+
+//A20 & -A20
+and(andwire1[20], a[20], notwire[0], notwire[1]);
+and(andwire2[20], sel[0], notwire[1], b[20]);
+and(andwire3[20], negA[20], notwire[0], sel[1]);
+or(out[20], andwire1[20], andwire2[20], andwire3[20]);
+
+//A21 & -A21
+and(andwire1[21], a[21], notwire[0], notwire[1]);
+and(andwire2[21], sel[0], notwire[1], b[21]);
+and(andwire3[21], negA[21], notwire[0], sel[1]);
+or(out[21], andwire1[21], andwire2[21], andwire3[21]);
+
+//A22 & -A22
+and(andwire1[22], a[22], notwire[0], notwire[1]);
+and(andwire2[22], sel[0], notwire[1], b[22]);
+and(andwire3[22], negA[22], notwire[0], sel[1]);
+or(out[22], andwire1[22], andwire2[22], andwire3[22]);
+
+//A23 & -A23
+and(andwire1[23], a[23], notwire[0], notwire[1]);
+and(andwire2[23], sel[0], notwire[1], b[23]);
+and(andwire3[23], negA[23], notwire[0], sel[1]);
+or(out[23], andwire1[23], andwire2[23], andwire3[23]);
+
+//A24 & -A24
+and(andwire1[24], a[24], notwire[0], notwire[1]);
+and(andwire2[24], sel[0], notwire[1], b[24]);
+and(andwire3[24], negA[24], notwire[0], sel[1]);
+or(out[24], andwire1[24], andwire2[24], andwire3[24]);
+
+//A25 & -A25
+and(andwire1[25], a[25], notwire[0], notwire[1]);
+and(andwire2[25], sel[0], notwire[1], b[25]);
+and(andwire3[25], negA[25], notwire[0], sel[1]);
+or(out[25], andwire1[25], andwire2[25], andwire3[25]);
+
+//A26 & -A26
+and(andwire1[26], a[26], notwire[0], notwire[1]);
+and(andwire2[26], sel[0], notwire[1], b[26]);
+and(andwire3[26], negA[26], notwire[0], sel[1]);
+or(out[26], andwire1[26], andwire2[26], andwire3[26]);
+
+//A27 & -A27
+and(andwire1[27], a[27], notwire[0], notwire[1]);
+and(andwire2[27], sel[0], notwire[1],b[27]);
+and(andwire3[27], negA[27], notwire[0], sel[1]);
+or(out[27], andwire1[27], andwire2[27], andwire3[27]);
+
+//A28 & -A28
+and(andwire1[28], a[28], notwire[0], notwire[1]);
+and(andwire2[28], sel[0], notwire[1], b[28]);
+and(andwire3[28], negA[28], notwire[0], sel[1]);
+or(out[28], andwire1[28], andwire2[28], andwire3[28]);
+
+//A29 & -A29
+and(andwire1[29], a[29], notwire[0], notwire[1]);
+and(andwire2[29], sel[0], notwire[1], b[29]);
+and(andwire3[29], negA[29], notwire[0], sel[1]);
+or(out[29], andwire1[29], andwire2[29], andwire3[29]);
+
+//A30 & -A30
+and(andwire1[30], a[30], notwire[0], notwire[1]);
+and(andwire2[30], sel[0], notwire[1], b[30]);
+and(andwire3[30], negA[30], notwire[0], sel[1]);
+or(out[30], andwire1[30], andwire2[30], andwire3[30]);
+
+//A31 & -A31
+and(andwire1[31], a[31], notwire[0], notwire[1]);
+and(andwire2[31], sel[0], notwire[1], b[31]);
+and(andwire3[31], negA[31], notwire[0], sel[1]);
+or(out[31], andwire1[31], andwire2[31], andwire3[31]);
 
 endmodule
