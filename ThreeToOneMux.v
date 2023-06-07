@@ -1,4 +1,4 @@
-module three_oneMux(a, negA, b, sel, out);
+module ThreeToOneMux(a, negA, b, sel, out);
 
 input [31:0] a;
 input [31:0] negA;

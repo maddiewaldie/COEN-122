@@ -8,24 +8,24 @@ module testbench();
     wire [31:0] adder_out;
     wire [31:0] data_WB;
     wire jumpMem_WB;
-    wire [1:0] or_out;
-    wire [31:0] mux_out;
+    wire or_out;
+    wire [31:0] muxOut;
     wire [31:0] PCIn;
 
-    MUX mux_test(rs_EX, adder_out, data_WB, jumpMem_WB, or_out, PCIn); //needs to be double checked if rs_EX is correct wire
+    MUX mux_test(PCIn, rs_EX, data_WB, jumpMem_WB, or_out, muxOut); //needs to be double checked if rs_EX is correct wire
     
     /* PC */
    
     wire [31:0] PCOut;
     reg clock;
     
-    programCounter PC_test(PCIn, clock, PCOut);
+    programCounter PC_test(muxOut, clock, PCOut);
 
     /* first adder */
     
-    wire N, Z;
+    wire N_ignore, Z_ignore;
 
-    alu adder_test(PCOut, 1, 4'b0, PCIn, N, Z);
+    alu adder_test(PCOut, 1, 4'b0, PCIn, N_ignore, Z_ignore);
     
     /*Instruction Memory */
     
@@ -34,7 +34,6 @@ module testbench();
     instructionMemory im_test (clock, PCOut, inst_in);
     
     /* IF/ID Buffer */
-    wire [31:0] PC_if;
     wire [31:0] PC_id;
     wire [3:0] opcode;
     wire [5:0] rs1;
@@ -44,7 +43,7 @@ module testbench();
     wire [15:0] signIn_inc;
     
     
-    IF_ID ifid_test (clock, PC_if, inst_in, PC_id, opcode, rs1, rs2, rd, signIn, signIn_inc);
+    IF_ID ifid_test (clock, PCOut, inst_in, PC_id, opcode, rs1, rs2, rd, signIn, signIn_inc);
     
     /* immediate generator 1 */
     wire [31:0] imm;
@@ -69,14 +68,7 @@ module testbench();
     
     controlUnit control_test(opcode, regWrite, memToReg, ALUSrc1, ALUSrc2, branchN, branchZ, jump, jumpMem, memRead, memWrite, aluOp);
     
-    /* Logic Gates */
-    wire z_and_out, n_and_out;
-    
-    andGate z_andGate_test(Z, branch_Z, z_and_out);
-    andGate n_andGate_test(N, branch_N, n_and_out);
-    
-    orGate or_gate_test(z_and_out, n_and_out, jump, or_out); //do we need to sign extend this so that or_out is 4 bits because it is a control to the 4:1 mux??
-    
+   
     /*Register File */
     
     wire regWrite_WB; //from wb? or directly from control? 
@@ -92,11 +84,14 @@ module testbench();
     wire [31:0] PC_EX;
     wire [31:0] rs_EX;
     wire [31:0] rt_EX;
-    
+    wire jump_EX;
+    wire branchZEX;
+    wire branchNEX;
     ID_EXMEM id_exmem_test(clock, regWrite, memToReg, ALUSrc1, ALUSrc2, jumpMem, memRead, memWrite, aluOp, PC_id, rs, rt, 
                      imm, imm_inc, rd, regWrite_EX, memToReg_EX, ALUSrc1_EX, jumpMem_EX, memRead_EX, 
                 memWrite_EX, aluOp_EX, ALUSrc2_EX, PC_EX, rs_EX, rt_EX, 
-                imm_EX, imm_incEX, rd_EX);
+                imm_EX, imm_incEX, rd_EX,
+                jump, branchZ, branchN, jump_EX, branchZEX, branchNEX);
     
     wire [31:0] alu_mux1; 
     wire [31:0] alu_mux2;
@@ -105,10 +100,11 @@ module testbench();
     TwoToOneMux alu_mux1_test(PC_EX, PC_id, ALUSrc2, alu_mux1);
 
     /* alu_mux2_test (three-to-one mux) */ 
-    ThreeToOneMux alu_mux2_test(rt_EX, imm_EX, imm_incEX ALUSrc1, alu_mux2);
+    ThreeToOneMux alu_mux2_test(rt_EX, imm_EX, imm_incEX, ALUSrc1, alu_mux2);
     
     /* ALU test */
     wire [31:0] alu_EX;
+    wire N, Z;
     
     alu alu_test(alu_mux1, alu_mux2, aluOp_EX, alu_EX, N, Z);
     
@@ -124,9 +120,22 @@ module testbench();
     wire [31:0] alu_WB;
     wire [31:0] data_WB;
     wire [5:0] rd_WB;   
-   
+    wire jump_WB;
+    wire branchZWB;
+    wire branchNWB;
+    wire NWB;
+    wire ZWB;
     EXMEM_WB exmem_wb_test(clock, regWrite_EX, memToReg_EX, jumpMem_EX, alu_EX, data_EX, rd_EX,
-                regWrite_WB, memToReg_WB, jumpMem_WB, alu_WB, data_WB, rd_WB);
+                regWrite_WB, memToReg_WB, jumpMem_WB, alu_WB, data_WB, rd_WB,
+                jump_EX,branchZEX, branchNEX, N, Z, jump_WB, branchZWB, branchNWB, NWB, ZWB);
+                
+     /* Logic Gates */
+    wire z_and_out, n_and_out;
+    
+    and_gate z_andGate_test(ZWB, branchZWB, z_and_out);
+    and_gate n_andGate_test(NWB, branchNWB, n_and_out);
+    
+    or_gate or_gate_test(z_and_out, n_and_out, jump, or_out);
     
     /* rightmost mux (two-to-one mux) */ 
     TwoToOneMux rightmost_mux_test(alu_WB, data_WB, memToReg, dataOut);

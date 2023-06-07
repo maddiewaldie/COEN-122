@@ -20,15 +20,14 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module MUX(A, B, C, D, sel, out);
+module MUX(A, B, C, jumpMem, or_out, out);
 
-    input A, B, C, D;
-    input [1:0] sel;
+    input A, B, C;
+    input jumpMem, or_out;
     output out;
-    and(outA, A, ~sel[1], ~sel[0]);
-    and(outB, B, ~sel[1], sel[0]);
-    and(outC, C, sel[1], ~sel[0]);
-    and(outD, D, sel[1], sel[0]);
-    or(out, outA, outB, outC, outD);
+    and(outA, A, ~jumpMem, ~or_out);
+    and(outB, B, ~jumpMem, or_out);
+    and(outC, C, jumpMem, ~or_out);
+    or(out, outA, outB, outC);
 
 endmodule

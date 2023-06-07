@@ -33,8 +33,8 @@ output reg[31:0] rtOut;
 
 initial
 begin
-    registers[10] = 2;
-    registers[11] = 6;
+    registers[2] = 2;
+    registers[3] = 6;
 end
 
 always@(posedge clk)

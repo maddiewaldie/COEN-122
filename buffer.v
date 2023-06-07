@@ -32,7 +32,7 @@ module IF_ID(clk, PC_if, inst_in, PC_id, opcode, rs1, rs2, rd, signIn, signIn_in
     output reg [21:0] signIn;
     output reg [15:0] signIn_inc;
     
-    always@(posedge clk)
+    always@(negedge clk)
     begin
         PC_id = PC_if;
         opcode = inst_in[31:28];
@@ -44,12 +44,11 @@ module IF_ID(clk, PC_if, inst_in, PC_id, opcode, rs1, rs2, rd, signIn, signIn_in
     end
 endmodule
 
-module ID_EXMEM(clk, input regWrite, input memToReg, 
-                input ALUSrc1, input ALUSrc2, input jumpMem, 
-                input memRead, input memWrite, input aluOp, input PC_id, input rs, input rt, input imm, input imm_inc, input rd,
-                output regWrite_EX, output memToReg_EX, output ALUSrc1_EX, output jumpMem_EX, output memRead_EX, 
-                output memWrie_EX, output aluOp_EX, output ALUSrc2_EX, output PC_EX, output rs_EX, output rt_EX, 
-                output imm_EX, output imm_incEX, output rd_EX);
+module ID_EXMEM(clk, regWrite, memToReg, ALUSrc1, ALUSrc2, jumpMem, 
+                 memRead,  memWrite,  aluOp,  PC_id,  rs,  rt,  imm,  imm_inc,  rd,
+                 regWrite_EX,  memToReg_EX,  ALUSrc1_EX,  jumpMem_EX,  memRead_EX, 
+                 memWrite_EX,  aluOp_EX,  ALUSrc2_EX,  PC_EX,  rs_EX,  rt_EX, 
+                 imm_EX,  imm_incEX,  rd_EX, jump, branchZ, branchN, jump_EX, branchZEX, branchNEX);
     input clk;
     input regWrite;
     input memToReg; 
@@ -62,6 +61,7 @@ module ID_EXMEM(clk, input regWrite, input memToReg,
     input [31:0] imm;
     input [31:0] imm_inc; 
     input [5:0] rd; 
+    input jump, branchZ, branchN;
     
     output reg regWrite_EX, memToReg_EX, ALUSrc2_EX, jumpMem_EX, memRead_EX, memWrite_EX;
     output reg [1:0] ALUSrc1_EX;
@@ -71,8 +71,9 @@ module ID_EXMEM(clk, input regWrite, input memToReg,
     output reg [31:0] imm_EX; //ASK ABOUT THIIS
     output reg [31:0] imm_incEX;
     output reg [5:0] rd_EX;
+    output reg jump_EX, branchZEX, branchNEX;
     
-    always@(posedge clk)
+    always@(negedge clk)
     begin
         regWrite_EX = regWrite;
         memToReg_EX = memToReg;
@@ -82,27 +83,33 @@ module ID_EXMEM(clk, input regWrite, input memToReg,
         memRead_EX = memRead;
         memWrite_EX = memWrite;
         aluOp_EX = aluOp;
-        PC_EX = PC;
+        PC_EX = PC_id;
         rs_EX = rs;
         rt_EX = rt;
         imm_EX = imm; 
         imm_incEX = imm_inc;
         rd_EX = rd;
+        jump_EX = jump;
+        branchZEX = branchZ;
+        branchNEX = branchN;
     
     end 
 endmodule
 
-module EXMEM_WB(input clk, input regWrite_EX, input memToReg_EX, input jumpMem_EX, input ALU_EX, input data_EX, input rd_EX,
-                output regWrite_WB, output memToReg_WB, output jumpMem_WB, output ALU_WB, output data_WB, output rd_MEM);
+module EXMEM_WB(clk, regWrite_EX, memToReg_EX, jumpMem_EX, ALU_EX, data_EX, rd_EX,
+                 regWrite_WB,  memToReg_WB,  jumpMem_WB,  ALU_WB,  data_WB,  rd_WB, jump_EX, 
+                 branchZEX, branchNEX, N, Z, jump_WB, branchZWB, branchNWB, NWB, ZWB);
     input clk;
     input regWrite_EX, memToReg_EX, jumpMem_EX; 
     input [31:0] ALU_EX;
     input [31:0] data_EX;
     input [5:0] rd_EX;
+    input jump_EX, branchZEX, branchNEX, N, Z;
     output reg regWrite_WB, memToReg_WB, jumpMem_WB, ALU_WB;
     output reg [31:0] data_WB;
-    output reg [5:0] rd_MEM;
-    always@(posedge clk)
+    output reg [5:0] rd_WB;
+    output reg jump_WB, branchZWB, branchNWB, NWB, ZWB;
+    always@(negedge clk)
     begin
         regWrite_WB = regWrite_EX;
         memToReg_WB = memToReg_EX;
@@ -110,6 +117,11 @@ module EXMEM_WB(input clk, input regWrite_EX, input memToReg_EX, input jumpMem_E
         ALU_WB = ALU_EX;
         data_WB = data_EX;
         rd_WB = rd_EX;
+        jump_WB = jump_EX;
+        branchZWB = branchZEX;
+        branchNWB = branchNEX;
+        NWB = N;
+        ZWB = Z;
     end
 endmodule
 

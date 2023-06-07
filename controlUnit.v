@@ -20,12 +20,12 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module controlUnit(input opcode, output regWrite, output memToReg, output ALUSrc1, output ALUSrc2, output branchN, output branchZ, output jump, output jumpMem, output memRead, output memWrite, output aluOp);
+module controlUnit(opcode, regWrite, memToReg, ALUSrc1, ALUSrc2, branchN, branchZ, jump, jumpMem, memRead, memWrite, aluOp);
 
 input [3:0] opcode;
-output regWrite, memToReg, ALUSrc2, branchN, branchZ, jump, jumpMem, memRead, memWrite;
-output [1:0] ALUSrc1;
-output [3:0] aluOp;
+output reg regWrite, memToReg, ALUSrc2, branchN, branchZ, jump, jumpMem, memRead, memWrite;
+output reg [1:0] ALUSrc1;
+output reg [3:0] aluOp;
 
 always@(opcode)
 	begin

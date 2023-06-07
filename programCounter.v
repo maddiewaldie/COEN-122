@@ -1,16 +1,21 @@
 `timescale 1ns / 1ps
 
-module programCounter(input in, input clk, output out);
+module programCounter(in, clk, out);
 
 input [31:0] in;
 input clk;
-output [31:0] out;
-wire [31:0] pcValue;
+output reg [31:0] out;
 
-always@(posedge clk)
+initial
+begin
+out = 0;
+end
+
+always@(negedge clk)
     begin
-        pcValue = in;
-        out = pcValue;
+        //out = out + 1;
+    if (in != 0)
+        out = in;
     end
 
 endmodule
