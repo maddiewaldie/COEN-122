@@ -11,21 +11,24 @@ module testbench();
     wire or_out;
     wire [31:0] muxOut;
     wire [31:0] PCIn;
+    reg clock;
 
-    MUX mux_test(PCIn, rs_EX, data_WB, jumpMem_WB, or_out, muxOut); //needs to be double checked if rs_EX is correct wire
-    
+   // MUX mux_test(PCIn, rs_EX, data_WB, jumpMem_WB, or_out, muxOut); //needs to be double checked if rs_EX is correct wire
+    MUX mux_test(clock, adder_out, rs_WB, data_WB, jumpMem_WB, or_out, PCIn);
     /* PC */
    
     wire [31:0] PCOut;
-    reg clock;
+   
     
-    programCounter PC_test(muxOut, clock, PCOut);
+    programCounter PC_test(PCIn, clock, PCOut);
 
     /* first adder */
     
-    wire N_ignore, Z_ignore;
+    //wire N_ignore, Z_ignore;
 
-    alu adder_test(PCOut, 1, 4'b0, PCIn, N_ignore, Z_ignore);
+   // alu adder_test(PCOut, 1, 4'b0, PCIn, N_ignore, Z_ignore);
+   
+   PC_adder pc_adder_test(PCOut, adder_out);
     
     /*Instruction Memory */
     
@@ -75,7 +78,7 @@ module testbench();
     wire [31:0] rs;
     wire [31:0] rt;
     wire [31:0] dataOut;
-    register register_file_test(clock, regWrite_WB, rd, rs1, rs2, dataOut, rs, rt);
+    register register_file_test(clock, regWrite_WB, rd_WB, rs1, rs2, dataOut, rs, rt);
     
     /* ID_EXMEM Buffer */
     wire regWrite_EX, memToReg_EX, jumpMem_EX, memRead_EX, memWrite_EX, ALUSrc2_EX;
@@ -84,6 +87,7 @@ module testbench();
     wire [31:0] PC_EX;
     wire [31:0] rs_EX;
     wire [31:0] rt_EX;
+    wire [5:0] rd_EX;
     wire jump_EX;
     wire branchZEX;
     wire branchNEX;
@@ -97,7 +101,7 @@ module testbench();
     wire [31:0] alu_mux2;
 
     /* alu_mux1_test (two-to-one mux) */
-    TwoToOneMux alu_mux1_test(PC_EX, PC_id, ALUSrc2, alu_mux1);
+    TwoToOneMux alu_mux1_test(clock, rs_EX, PC_EX, ALUSrc2, alu_mux1);
 
     /* alu_mux2_test (three-to-one mux) */ 
     ThreeToOneMux alu_mux2_test(rt_EX, imm_EX, imm_incEX, ALUSrc1, alu_mux2);
@@ -120,13 +124,14 @@ module testbench();
     wire [31:0] alu_WB;
     wire [31:0] data_WB;
     wire [5:0] rd_WB;   
+    wire [5:0] rs_WB;
     wire jump_WB;
     wire branchZWB;
     wire branchNWB;
     wire NWB;
     wire ZWB;
-    EXMEM_WB exmem_wb_test(clock, regWrite_EX, memToReg_EX, jumpMem_EX, alu_EX, data_EX, rd_EX,
-                regWrite_WB, memToReg_WB, jumpMem_WB, alu_WB, data_WB, rd_WB,
+    EXMEM_WB exmem_wb_test(clock, regWrite_EX, memToReg_EX, jumpMem_EX, alu_EX, data_EX, rd_EX, rs_EX,
+                regWrite_WB, memToReg_WB, jumpMem_WB, alu_WB, data_WB, rd_WB, rs_WB,
                 jump_EX,branchZEX, branchNEX, N, Z, jump_WB, branchZWB, branchNWB, NWB, ZWB);
                 
      /* Logic Gates */
@@ -138,12 +143,19 @@ module testbench();
     or_gate or_gate_test(z_and_out, n_and_out, jump, or_out);
     
     /* rightmost mux (two-to-one mux) */ 
-    TwoToOneMux rightmost_mux_test(alu_WB, data_WB, memToReg, dataOut);
+    TwoToOneMux rightmost_mux_test(clock, alu_WB, data_WB, memToReg, dataOut);
     
     initial
     begin
         clock = 0;
         forever #5 clock = ~clock;
     end    
+    
+    initial
+    begin
+        //set PC=0
+        #100;
+        $finish;
+    end
 
 endmodule

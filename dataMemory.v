@@ -10,11 +10,11 @@ output reg [31:0] dataOut;
 
 initial
 begin
-    data[2] = 3;
+    data[2] = 3; //register 2 = address which is 2
     data[3] = -4;
     data[4] = 5;
     data[5] = 2;
-    data[6] = 20;
+    data[6] = 20; //register 3 = address which is 6
 end
 
 always@(posedge clk)

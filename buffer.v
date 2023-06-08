@@ -67,7 +67,8 @@ module ID_EXMEM(clk, regWrite, memToReg, ALUSrc1, ALUSrc2, jumpMem,
     output reg [1:0] ALUSrc1_EX;
     output reg [3:0] aluOp_EX;
     output reg [31:0] PC_EX;
-    output reg [31:0] rs_EX, rt_EX; 
+    output reg [31:0] rs_EX;
+    output reg [31:0] rt_EX; 
     output reg [31:0] imm_EX; //ASK ABOUT THIIS
     output reg [31:0] imm_incEX;
     output reg [5:0] rd_EX;
@@ -96,18 +97,21 @@ module ID_EXMEM(clk, regWrite, memToReg, ALUSrc1, ALUSrc2, jumpMem,
     end 
 endmodule
 
-module EXMEM_WB(clk, regWrite_EX, memToReg_EX, jumpMem_EX, ALU_EX, data_EX, rd_EX,
+module EXMEM_WB(clk, regWrite_EX, memToReg_EX, jumpMem_EX, ALU_EX, data_EX, rd_EX, rs_EX,
                  regWrite_WB,  memToReg_WB,  jumpMem_WB,  ALU_WB,  data_WB,  rd_WB, jump_EX, 
-                 branchZEX, branchNEX, N, Z, jump_WB, branchZWB, branchNWB, NWB, ZWB);
+                 branchZEX, branchNEX, N, Z, jump_WB, branchZWB, branchNWB, NWB, ZWB, rs_WB);
     input clk;
     input regWrite_EX, memToReg_EX, jumpMem_EX; 
     input [31:0] ALU_EX;
     input [31:0] data_EX;
-    input [5:0] rd_EX;
+    input [5:0] rd_EX; 
+    input [5:0] rs_EX;
     input jump_EX, branchZEX, branchNEX, N, Z;
-    output reg regWrite_WB, memToReg_WB, jumpMem_WB, ALU_WB;
+    output reg regWrite_WB, memToReg_WB, jumpMem_WB;
+    output reg [31:0] ALU_WB;
     output reg [31:0] data_WB;
     output reg [5:0] rd_WB;
+    output reg [5:0] rs_WB;
     output reg jump_WB, branchZWB, branchNWB, NWB, ZWB;
     always@(negedge clk)
     begin
@@ -117,6 +121,7 @@ module EXMEM_WB(clk, regWrite_EX, memToReg_EX, jumpMem_EX, ALU_EX, data_EX, rd_E
         ALU_WB = ALU_EX;
         data_WB = data_EX;
         rd_WB = rd_EX;
+        rs_WB =  rs_EX;
         jump_WB = jump_EX;
         branchZWB = branchZEX;
         branchNWB = branchNEX;

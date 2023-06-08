@@ -39,6 +39,7 @@ end
 
 always@(posedge clk)
 begin
+    #0.5
     rsOut = registers[rs1];
     rtOut = registers[rs2];
     if(wrt == 1)

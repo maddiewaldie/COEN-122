@@ -13,6 +13,7 @@ end
 
 always@(negedge clk)
     begin
+    #0.5
         //out = out + 1;
     if (in != 0)
         out = in;

@@ -20,14 +20,27 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module MUX(A, B, C, jumpMem, or_out, out);
-
-    input A, B, C;
+module MUX(clk, adder_out, data_WB, rs_WB, jumpMem, or_out, out);
+    input clk;
+    input [31:0] adder_out; 
+    input [31:0] data_WB;
+    input [31:0] rs_WB;
     input jumpMem, or_out;
-    output out;
-    and(outA, A, ~jumpMem, ~or_out);
-    and(outB, B, ~jumpMem, or_out);
-    and(outC, C, jumpMem, ~or_out);
-    or(out, outA, outB, outC);
+    output reg [31:0] out;
 
+always @(negedge clk)
+begin
+    if (jumpMem == 1)
+        out = data_WB; 
+    else if (or_out == 1)
+        out = rs_WB;
+    else
+        out=adder_out;
+end    
+    
+    /*and(outA, adder_out, ~or_out, ~jumpMem);
+    and(outB, data_WB, 1, jumpMem);
+    and(outC, rs_WB, or_out, ~jumpMem);
+   
+    or(out, outA, outB, outC);*/
 endmodule

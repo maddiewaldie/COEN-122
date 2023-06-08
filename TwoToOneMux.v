@@ -20,19 +20,24 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module TwoToOneMux(A, negA, sel, out);
+module TwoToOneMux(clk, rs_EX, PC_EX, ALUSrc2, alu_mux1);
 
-input [31:0] A;
-input [31:0] negA;
-input [1:0] sel;
-output [31:0] out;
+input clk;
+input [31:0] PC_EX;
+input [31:0] rs_EX;
+input ALUSrc2;
+output reg [31:0] alu_mux1;
 
-wire [31:0] out1;
-wire [31:0] out2;
-wire [31:0] out3;
-wire notSel0, notSel1;
+always @(posedge clk)
+begin
+    if (ALUSrc2 == 0)
+        alu_mux1 = rs_EX;
+    if (ALUSrc2 == 1)
+        alu_mux1 = PC_EX;
+end      
+    
 
-not(notSel0, sel[0]);
+/*not(notSel0, sel[0]);
 not(notSel1, sel[1]);
 
 and(out1[0], A[0], notSel0, notSel1);
@@ -169,6 +174,6 @@ or(out[29], out1[29], out2[29], out3[29]);
 or(out[30], out1[30], out2[30], out3[30]);
 or(out[31], out1[31], out2[31], out3[31]);
 
-
+*/
 
 endmodule
