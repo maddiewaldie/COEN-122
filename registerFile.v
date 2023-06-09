@@ -37,6 +37,7 @@ begin
     registers[3] = 5;
     registers[4] = 0;
     registers[8] = 0;
+    registers[9] = 10;
 end
 
 always@(posedge clk)

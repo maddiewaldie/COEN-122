@@ -15,6 +15,8 @@ begin
     data[4] = 5;
     data[5] = 2;
     data[6] = 20; //register 3 = address which is 6
+    
+    data[7] = 10;
 end
 
 always@(posedge clk)

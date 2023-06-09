@@ -117,7 +117,7 @@ module testbench();
     /* Data Memory test */
     wire [31:0] data_EX;
     
-    dataMemory dataMemory_test(clock, memRead_EX, memWrite_EX, rs_EX, rt_EX, data_EX);
+    dataMemory dataMemory_test(clock, memRead_EX, memWrite_EX,  rt_EX,rs_EX, data_EX);
     
     /* EXMEM_WB Buffer */
  
@@ -156,7 +156,7 @@ module testbench();
    /* initial
     begin
         //set PC=0
-        #500;
+        #1500;
         $finish;
     end*/
 
