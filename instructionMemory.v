@@ -27,12 +27,12 @@ module instructionMemory(clk, addr, out);
     assign instructions[20] = 32'b0000_000000_000000_000000_0000000000;	
     assign instructions[21] = 32'b0000_000000_000000_000000_0000000000;
     
-    assign instructions[22] = 32'b1011_001001_0000000000000000000000; //BRN x9
+    assign instructions[22] = 32'b1011_000000_001001_0000000000000000; //BRN x9
 
     // Other instructions:
-    assign instructions[23] = 32'b0011_000101_000011_0000000000000000; //ST x5, x3
-    assign instructions[24] = 32'b1010_001001_0000000000000000000000; //JM x9
-    assign instructions[25] = 32'b1001_000110_0000000000000000000000;//BRZ x6
+   // assign instructions[23] = 32'b0011_000101_000011_0000000000000000; //ST x5, x3
+    //assign instructions[24] = 32'b1010_001001_0000000000000000000000; //JM x9
+   // assign instructions[25] = 32'b1001_000110_0000000000000000000000;//BRZ x6
 
     always@(posedge clk)
     begin

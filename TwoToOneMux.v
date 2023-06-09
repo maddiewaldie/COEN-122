@@ -23,12 +23,12 @@
 module TwoToOneMux(clk, rs_EX, PC_EX, ALUSrc2, alu_mux1);
 
 input clk;
-input [31:0] PC_EX;
-input [31:0] rs_EX;
-input ALUSrc2;
-output reg [31:0] alu_mux1;
+input [31:0] PC_EX; //alu_WB
+input [31:0] rs_EX; //data_WB
+input ALUSrc2; //memToReg_WB
+output reg [31:0] alu_mux1; //data_out
 
-always @(posedge clk)
+always @(rs_EX, PC_EX, ALUSrc2)
 begin
     if (ALUSrc2 == 0)
         alu_mux1 = rs_EX;

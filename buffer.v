@@ -98,20 +98,20 @@ module ID_EXMEM(clk, regWrite, memToReg, ALUSrc1, ALUSrc2, jumpMem,
 endmodule
 
 module EXMEM_WB(clk, regWrite_EX, memToReg_EX, jumpMem_EX, ALU_EX, data_EX, rd_EX, rs_EX,
-                 regWrite_WB,  memToReg_WB,  jumpMem_WB,  ALU_WB,  data_WB,  rd_WB, jump_EX, 
-                 branchZEX, branchNEX, N, Z, jump_WB, branchZWB, branchNWB, NWB, ZWB, rs_WB);
+                 regWrite_WB,  memToReg_WB,  jumpMem_WB,  ALU_WB,  data_WB,  rd_WB,rs_WB, jump_EX, 
+                 branchZEX, branchNEX, N, Z, jump_WB, branchZWB, branchNWB, NWB, ZWB);
     input clk;
     input regWrite_EX, memToReg_EX, jumpMem_EX; 
     input [31:0] ALU_EX;
     input [31:0] data_EX;
     input [5:0] rd_EX; 
-    input [5:0] rs_EX;
+    input [31:0] rs_EX;
     input jump_EX, branchZEX, branchNEX, N, Z;
     output reg regWrite_WB, memToReg_WB, jumpMem_WB;
     output reg [31:0] ALU_WB;
     output reg [31:0] data_WB;
     output reg [5:0] rd_WB;
-    output reg [5:0] rs_WB;
+    output reg [31:0] rs_WB;
     output reg jump_WB, branchZWB, branchNWB, NWB, ZWB;
     always@(negedge clk)
     begin

@@ -54,7 +54,7 @@ module testbench();
     
     /* immediate generator 2 (for increment instruction) */
     wire [31:0] imm_inc;
-    signExtend imm_gen_test2(signIn_inc, imm_inc);
+    signExtendInc imm_gen_inc(signIn_inc, imm_inc);
     
     /* Control Unit */
     wire regWrite;
@@ -87,6 +87,8 @@ module testbench();
     wire [31:0] PC_EX;
     wire [31:0] rs_EX;
     wire [31:0] rt_EX;
+    wire [31:0] imm_EX;
+    wire [31:0] imm_incEX;
     wire [5:0] rd_EX;
     wire jump_EX;
     wire branchZEX;
@@ -101,10 +103,10 @@ module testbench();
     wire [31:0] alu_mux2;
 
     /* alu_mux1_test (two-to-one mux) */
-    TwoToOneMux alu_mux1_test(clock, rs_EX, PC_EX, ALUSrc2, alu_mux1);
+    TwoToOneMux alu_mux1_test(clock, rs_EX, PC_EX, ALUSrc2_EX, alu_mux1);
 
     /* alu_mux2_test (three-to-one mux) */ 
-    ThreeToOneMux alu_mux2_test(rt_EX, imm_EX, imm_incEX, ALUSrc1, alu_mux2);
+    ThreeToOneMux alu_mux2_test(rt_EX, imm_EX, imm_incEX, ALUSrc1_EX, alu_mux2);
     
     /* ALU test */
     wire [31:0] alu_EX;
@@ -124,7 +126,7 @@ module testbench();
     wire [31:0] alu_WB;
     wire [31:0] data_WB;
     wire [5:0] rd_WB;   
-    wire [5:0] rs_WB;
+    wire [31:0] rs_WB;
     wire jump_WB;
     wire branchZWB;
     wire branchNWB;
@@ -143,7 +145,7 @@ module testbench();
     or_gate or_gate_test(z_and_out, n_and_out, jump, or_out);
     
     /* rightmost mux (two-to-one mux) */ 
-    TwoToOneMux rightmost_mux_test(clock, alu_WB, data_WB, memToReg, dataOut);
+    TwoToOneMux rightmost_mux_test(clock, alu_WB, data_WB, memToReg_WB, dataOut);
     
     initial
     begin
@@ -151,11 +153,11 @@ module testbench();
         forever #5 clock = ~clock;
     end    
     
-    initial
+   /* initial
     begin
         //set PC=0
-        #100;
+        #500;
         $finish;
-    end
+    end*/
 
 endmodule

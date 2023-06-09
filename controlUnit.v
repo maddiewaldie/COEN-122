@@ -57,7 +57,7 @@ always@(opcode)
             jumpMem = 0;
             memRead = 0;
             memWrite = 0;
-            aluOp = 4'b0100;
+            aluOp = 4'b0000;
         end
         // Load
         else if (opcode == 4'b1110)
@@ -117,7 +117,7 @@ always@(opcode)
             jumpMem = 0;
             memRead = 0;
             memWrite = 0;
-            aluOp = 4'b0001;
+            aluOp = 4'b0000;
         end
         // Negate
         else if (opcode == 4'b0110)

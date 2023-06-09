@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module MUX(clk, adder_out, data_WB, rs_WB, jumpMem, or_out, out);
+module MUX(clk, adder_out, rs_WB, data_WB,  jumpMem, or_out, out);
     input clk;
     input [31:0] adder_out; 
     input [31:0] data_WB;
@@ -28,7 +28,7 @@ module MUX(clk, adder_out, data_WB, rs_WB, jumpMem, or_out, out);
     input jumpMem, or_out;
     output reg [31:0] out;
 
-always @(negedge clk)
+always @(adder_out, data_WB, rs_WB, jumpMem, or_out)
 begin
     if (jumpMem == 1)
         out = data_WB; 

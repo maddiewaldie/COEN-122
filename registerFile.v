@@ -34,7 +34,9 @@ output reg[31:0] rtOut;
 initial
 begin
     registers[2] = 2;
-    registers[3] = 6;
+    registers[3] = 5;
+    registers[4] = 0;
+    registers[8] = 0;
 end
 
 always@(posedge clk)

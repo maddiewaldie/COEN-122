@@ -10,8 +10,19 @@ wire [31:0] andwire1;
 wire [31:0] andwire2;
 wire [31:0] andwire3;
 
-output [31:0] out;
-
+output reg [31:0] out;
+//ThreeToOneMux alu_mux2_test(rt_EX, imm_EX, imm_incEX, ALUSrc1_EX, alu_mux2);
+    
+always@(a, negA, b, sel)
+begin
+    if(sel[1] == 0 && sel[0] == 0)
+        out = a;
+    if (sel[1]==0 && sel[0] == 1)
+        out = negA;
+    if (sel[1] == 1 && sel[0] ==0)
+        out = b;
+end 
+/*
 //Not gate applies to all bits of A & -A
 not(notwire[0], sel[0]);
 not(notwire[1], sel[1]);
@@ -207,5 +218,5 @@ and(andwire1[31], a[31], notwire[0], notwire[1]);
 and(andwire2[31], sel[0], notwire[1], b[31]);
 and(andwire3[31], negA[31], notwire[0], sel[1]);
 or(out[31], andwire1[31], andwire2[31], andwire3[31]);
-
+*/
 endmodule
